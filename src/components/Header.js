@@ -1,10 +1,10 @@
-import React, { useContext } from 'react';
-import TotalContext from './totalContext';
-import {Link} from "react-router-dom";
+import React  from 'react';
+import { Link } from 'react-router-dom';
+import {AppContext} from "../App";
+import {useCart} from "../hooks/useCart";
 
 function Header(props) {
-    const { total } = useContext(TotalContext);
-
+    const {totalPrice} = useCart()
     return <header className="header">
         <div className="headerLeft">
           <span className="header-img">
@@ -20,7 +20,7 @@ function Header(props) {
         <ul className="headerRight">
             <li onClick={props.onClickCart} className="headerRight__item">
                 <img width={20} height={20} src="/img/box.png" alt=""/>
-                <span>{total}</span>
+                <span>{totalPrice} руб.</span>
             </li>
             <Link to="/favorites">
             <li  className="headerRight__item">
@@ -29,11 +29,13 @@ function Header(props) {
             </span>
             </li>
             </Link>
+            <Link to="/orders">
             <li className="headerRight__item">
             <span  className="headerRight__item-user">
               <img width={20} height={20} src="/img/user.png" alt=""/>
             </span>
             </li>
+            </Link>
         </ul>
     </header>
 }

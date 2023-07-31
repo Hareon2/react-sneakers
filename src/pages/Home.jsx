@@ -1,6 +1,23 @@
 import Card from "../components/Card";
 
-function Home  ({searchValue,setSearchValue,onChangeSearchInput,items,onAddToFavorite,onAddCart})  {
+function Home  ({isLoading,cartItems,searchValue,setSearchValue,onChangeSearchInput,items,onAddToFavorite,onAddCart})  {
+    const renderItems = () => {
+        const filteredItems = items.filter((item) => item.name.toLowerCase().includes(searchValue.toLowerCase()))
+        return(isLoading ? Array.from({ length: 10 }, () => []) : filteredItems)
+            .map((obj, index) => (
+                <Card
+                    id={obj.id}
+                    key={index}
+                    title={obj.name}
+                    price={obj.price}
+                    imageUrl={obj.imageUrl}
+                    onFavorite={(obj) => onAddToFavorite(obj) }
+                    added={cartItems.some((item) => item.id === obj.id)}
+                    loading={isLoading}
+                    onPlus={(obj) => onAddCart(obj)}
+                />
+            ))
+    }
     return <div className="content">
         <div className="all-sneakers">
             <h1>{searchValue ? `Поиск по запросу "${searchValue}"` : 'Все кроссовки'}</h1>
@@ -11,21 +28,8 @@ function Home  ({searchValue,setSearchValue,onChangeSearchInput,items,onAddToFav
                        maxLength='30'/>
             </div>
         </div>
-
         <div className="Sneakers">
-            {items
-                .filter((item) => item.name.toLowerCase().includes(searchValue.toLowerCase()))
-                .map((obj, index) => (
-                    <Card
-                        id={obj.id}
-                        key={index}
-                        title={obj.name}
-                        price={obj.price}
-                        imageUrl={obj.imageUrl}
-                        onFavorite={(obj) => onAddToFavorite(obj) }
-                        onPlus={(obj) => onAddCart(obj)}
-                    />
-                ))}
+            {renderItems()}
         </div>
     </div>
 }

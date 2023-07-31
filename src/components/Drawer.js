@@ -1,7 +1,29 @@
-import TotalContext from './totalContext';
-import {useContext} from "react";
-function Drawer({onClose, onRemove, items=[]}) {
-    const { total } = useContext(TotalContext);
+import React from "react";
+import Info from "./Info";
+import {AppContext} from "../App";
+import axios from "axios";
+import {useCart} from "../hooks/useCart";
+function Drawer({onClose, onRemove, items=[],}) {
+    const [isOrdered,setIsOrdered] = React.useState(false)
+    const [IdOrder,setIdOrder] = React.useState(null)
+    const [isLoading,setIsLoading] = React.useState(true)
+    const {cartItems,setCartItems,totalPrice} = useCart()
+    const onClickOrder =  async () => {
+        try {
+            const {data} = await axios.post('http://localhost:8000/orders' ,{
+                items: cartItems
+            })
+            await axios.delete(`http://localhost:8000/cart/${data.items[0].id}`)
+            console.log(data)
+            setIsOrdered(true)
+            setIdOrder(data.id)
+            setCartItems([])
+        } catch (error){
+            alert('ошибка :/')
+        }
+    }
+
+
     return <div  className="overlay">
     <div className="drawer-father">
         <div className="drawer">
@@ -12,16 +34,16 @@ function Drawer({onClose, onRemove, items=[]}) {
                 </button>
             </h2>
             {items.length > 0 ? (
-                <div>
+                <>
                     <div className="items">
                         {items.map((obj) => (
-                            <div className="cartItem">
+                            <div key={obj.id} className="cartItem">
                                 <img width={70} height={70} src={obj.imageUrl} alt="" />
                                 <div className="card-box">
-                                    <p>Мужские Кроссовки Nike Air Max 270</p>
+                                    <p>{obj.title}</p>
                                     <b>{obj.price} руб.</b>
                                 </div>
-                                <button className='removeButton' onClick={() => onRemove(obj.id)}>
+                                <button className='removeButton' onClick={() =>onRemove(obj.id)}>
                                     <img src="/img/cross.png" alt="" />
                                 </button>
                             </div>
@@ -32,30 +54,27 @@ function Drawer({onClose, onRemove, items=[]}) {
                             <li>
                                 <span>Итого: </span>
                                 <div></div>
-                                <b>{total} руб. </b>
+                                <b>{totalPrice} руб. </b>
                             </li>
                             <li>
                                 <span>Налог 5%: </span>
                                 <div></div>
-                                <b>1074 руб. </b>
+                                <b>{Math.round(totalPrice  * 0.05)} руб. </b>
                             </li>
                         </ul>
-                        <button className="greenButtonArrowRight">
+                        <button  onClick={onClickOrder} className="greenButtonArrowRight">
                             Оформить заказ
                             <img width={16} height={14} src="/img/right-arrow.png" alt="" />
                         </button>
                     </div>
-                </div>
+                </>
             ) : (
-                <div className="cartEmpty">
-                    <img width={120} height={120} src="/img/drawerIsEmpty.png" alt="" />
-                    <h2>Корзина пустая</h2>
-                    <p>Добавьте хотя бы одну пару кроссовок, чтобы сделать заказ.</p>
-                    <button onClick={onClose} className="greenButtonArrowLeft">
-                        <img src="/img/left-arrow.png" alt="" />
-                        Вернуться назад
-                    </button>
-                </div>
+                <Info
+                    title={ isOrdered ? "Заказ оформлен!" : "Корзина пустая" }
+                    description={isOrdered ? `Ваш заказ #${IdOrder} скоро будет передан курьерской доставке` :"Добавьте хотя бы одну пару кроссовок, чтобы сделать заказ."}
+                    image={isOrdered ? "/img/IsOrdered.svg" :"/img/drawerIsEmpty.png"}
+                    onClose={onClose}
+                />
             )}
         </div>
     </div>
