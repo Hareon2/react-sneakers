@@ -2,13 +2,14 @@ import "./App.scss";
 import axios, {get} from "axios";
 import Card from "./components/Card";
 import Header from './components/Header'
-import Drawer from "./components/Drawer";
+import Index from "./components/Drawer";
 import {useState, useEffect, useContext} from "react";
 import {  Routes, Route } from "react-router-dom";
 import Home from './pages/Home'
 import Favorite from "./pages/Favorite";
 import React from "react";
 import Orders from "./pages/Orders";
+import Drawer from "./components/Drawer";
 export const AppContext = React.createContext({})
 
 function App() {
@@ -25,18 +26,24 @@ function App() {
     }
     useEffect(() => {
         const fetchData = async () => {
-            setIsLoading(true);
+            try{
+                setIsLoading(true);
+                const[cartResponce,itemsResponce,favoritesResponce] = await Promise.all([
+                    axios.get('http://localhost:8000/cart'),
+                    axios.get('http://localhost:8000/items'),
+                    axios.get('http://localhost:8000/favorite'),
+                ])
+                setTimeout(() => {
+                    setIsLoading(false);
+                    setCartItems(cartResponce.data);
+                    setFavorite(favoritesResponce.data);
+                    setItems(itemsResponce.data);
+                    console.log(cartItems)
+                }, 500);
+            }catch (error){
+                alert('ошибка')
+            }
 
-            const cartResponce = await axios.get('http://localhost:8000/cart');
-            const itemsResponce = await axios.get('http://localhost:8000/items');
-            const favoritesResponce = await axios.get('http://localhost:8000/favorite');
-
-            setTimeout(() => {
-                setIsLoading(false);
-                setCartItems(cartResponce.data);
-                setFavorite(favoritesResponce.data);
-                setItems(itemsResponce.data);
-            }, 500);
         };
 
         fetchData();
@@ -79,23 +86,36 @@ function App() {
         setCartItems((prev) => prev.filter((item) => item.id !== id));
     };
     return (
-        <AppContext.Provider value={{cartItems, items, favorite, onAddToFavorite,setCartItems}}>
+        <AppContext.Provider value={{
+            cartItems,
+            items,
+            favorite,
+            onAddCart,
+            onAddToFavorite,
+            setCartItems
+        }}>
             <div className="wrapper">
-                {cardOpened &&  <Drawer  onRemove={onRemoveItem} items={cartItems} onClose={() => setCartOpened(false)}/>}
+                {cardOpened && <Drawer
+                     onRemove={onRemoveItem}
+                     items={cartItems}
+                     opened={cardOpened}
+                     onClose={() => setCartOpened(false)}/>}
                 <Header
                     onClickCart={() => setCartOpened(true)}
                 />
                 <Routes>
                     <Route path="/" exact element={
-                        <Home isLoading={isLoading}
-                              onRemove={onRemoveItem}
-                              cartItems={cartItems}
-                              searchValue={searchValue}
-                              setSearchValue={setSearchValue}
-                              onChangeSearchInput={onChangeSearchInput}
-                              items={items}
-                              onAddToFavorite={onAddToFavorite}
-                              onAddCart={onAddCart}/>}
+                        <Home
+                            favorite={favorite}
+                            isLoading={isLoading}
+                            onRemove={onRemoveItem}
+                            cartItems={cartItems}
+                            searchValue={searchValue}
+                            setSearchValue={setSearchValue}
+                            onChangeSearchInput={onChangeSearchInput}
+                            items={items}
+                            onAddToFavorite={onAddToFavorite}
+                            onAddCart={onAddCart}/>}
                     />
                     <Route path="/favorites" element={<Favorite/>}/>
                     <Route path ="/orders" element={<Orders/>}/>

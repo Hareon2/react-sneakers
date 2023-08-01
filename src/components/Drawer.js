@@ -3,7 +3,7 @@ import Info from "./Info";
 import {AppContext} from "../App";
 import axios from "axios";
 import {useCart} from "../hooks/useCart";
-function Drawer({onClose, onRemove, items=[],}) {
+function Drawer({onClose, onRemove, items=[],opened}) {
     const [isOrdered,setIsOrdered] = React.useState(false)
     const [IdOrder,setIdOrder] = React.useState(null)
     const [isLoading,setIsLoading] = React.useState(true)
@@ -13,8 +13,8 @@ function Drawer({onClose, onRemove, items=[],}) {
             const {data} = await axios.post('http://localhost:8000/orders' ,{
                 items: cartItems
             })
-            await axios.delete(`http://localhost:8000/cart/${data.items[0].id}`)
-            console.log(data)
+            await axios.delete(`http://localhost:8000/cart/${data.id}`);
+            console.log(cartItems)
             setIsOrdered(true)
             setIdOrder(data.id)
             setCartItems([])
@@ -62,7 +62,7 @@ function Drawer({onClose, onRemove, items=[],}) {
                                 <b>{Math.round(totalPrice  * 0.05)} руб. </b>
                             </li>
                         </ul>
-                        <button  onClick={onClickOrder} className="greenButtonArrowRight">
+                        <button   onClick={onClickOrder} className="greenButtonArrowRight">
                             Оформить заказ
                             <img width={16} height={14} src="/img/right-arrow.png" alt="" />
                         </button>

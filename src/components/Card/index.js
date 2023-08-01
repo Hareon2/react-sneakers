@@ -2,15 +2,18 @@ import React, { useContext, useState, useEffect } from 'react';
 import styles from './Card.module.scss';
 import ContentLoader from "react-content-loader";
 
-function Card({ id, imageUrl, title, price, onFavorite, onPlus, favorited = false, added, loading }) {
+function Card({ id, imageUrl, title, price, onFavorite, onPlus, favorited, added, loading }) {
     const [isButtonClicked, setIsButtonClicked] = useState(added);
     const [isFavorite, setIsFavorite] = useState(favorited);
 
-
+    useEffect(() => {
+        setIsFavorite(favorited);
+    }, [favorited]);
     // Используем useEffect для обновления состояния isButtonClicked при изменении значения added
     useEffect(() => {
         setIsButtonClicked(added);
     }, [added]);
+
 
     const handleClick = () => {
         onPlus({ id, imageUrl, title, price });
@@ -41,9 +44,9 @@ function Card({ id, imageUrl, title, price, onFavorite, onPlus, favorited = fals
                     </ContentLoader> :
                     <>
                         <div className={styles.card__objects}>
-                            <div className={isFavorite ? styles.favorite : styles.unfavorite}>
+                            {onFavorite && <div className={isFavorite ? styles.favorite : styles.unfavorite}>
                                 <img onClick={onClickFavorite}  src={isFavorite ? "/img/heart-liked.svg" :"/img/heart-unliked.png" }/>
-                            </div>
+                            </div>}
                             <img height={112} width={133} src={imageUrl} alt=""/>
                             <p>{title}</p>
                             <div className={styles.card__info}>
@@ -51,13 +54,13 @@ function Card({ id, imageUrl, title, price, onFavorite, onPlus, favorited = fals
                                     <span>ЦЕНА:</span>
                                     <b>{price} руб.</b>
                                 </div>
-                                <button
+                                {onPlus && <button
                                     className={isButtonClicked ? styles.buttonClicked : styles.button}
                                     onClick={handleClick}
                                 >
                                     <img width={11} height={11} src={isButtonClicked ? "/img/checked.png" : "/img/plus.png"}
                                          alt=""/>
-                                </button>
+                                </button>}
                             </div>
                         </div>
                 </>
