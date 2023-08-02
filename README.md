@@ -1,3 +1,5 @@
+Неисправлен баг с отправкой заказа.Заказ отправляется и при обноблении  страницы кроссовки остаются в корзине.
+
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
