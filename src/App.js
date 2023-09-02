@@ -41,7 +41,7 @@ function App() {
                     console.log(cartItems)
                 }, 500);
             }catch (error){
-                alert('ошибка')
+                alert('ошибка не удалось получить данные, запустите db.json сервер на порту 8000')
             }
 
         };
