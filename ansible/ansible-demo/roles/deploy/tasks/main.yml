@@ -1,0 +1,16 @@
+- name: Создание пользователя для Docker
+  become: true
+  user:
+    name: user_docker
+    state: present
+    append: yes
+    groups: docker
+    shell: /bin/bash
+    generate_ssh_key: yes
+
+- name: Запуск docker-compose.yml
+  become: true
+  community.docker.docker_compose:
+    project_src: "/home/vagrant/code/docker-demo"
+    project_name: my_app
+    state: present
