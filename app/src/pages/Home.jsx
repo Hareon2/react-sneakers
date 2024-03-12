@@ -28,7 +28,7 @@ function Home  ({favorite,isLoading,cartItems,searchValue,setSearchValue,onChang
             <div className="search-block">
                 <img src="/img/searc-icon.jpg" alt=""/>
                 {searchValue && <img onClick={() => setSearchValue('')} className="clear" width={11} height={11} src="/img/cross.png" alt=""/>}
-                <input onChange={onChangeSearchInput} value={searchValue} placeholder="Поиск..."
+                <input onChange={onChangeSearchInput} value={searchValue} placeholder="жоп..."
                        maxLength='28'/>
             </div>
         </div>

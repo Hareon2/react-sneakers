@@ -29,9 +29,9 @@ function App() {
             try{
                 setIsLoading(true);
                 const[cartResponce,itemsResponce,favoritesResponce] = await Promise.all([
-                    axios.get('http://localhost:8000/cart'),
-                    axios.get('http://localhost:8000/items'),
-                    axios.get('http://localhost:8000/favorite'),
+                    axios.get('http://192.168.0.105/api/cart'),
+                    axios.get('http://192.168.0.105/api/items'),
+                    axios.get('http://192.168.0.105/api/favorite'),
                 ])
                 setTimeout(() => {
                     setIsLoading(false);
@@ -54,12 +54,12 @@ function App() {
             const favoriteIndex = favorite.findIndex((favObj) => favObj.id === obj.id);
             if (favoriteIndex !== -1) {
                 // Товар уже есть в избранном, удаляем его
-                axios.delete(`http://localhost:8000/favorite/${obj.id}`).then(() => {
+                axios.delete(`http://192.168.0.105/api/favorite/${obj.id}`).then(() => {
                     setFavorite((prev) => prev.filter((item) => item.id !== obj.id));
                 });
             } else {
                 // Товара нет в избранном, добавляем его
-                axios.post("http://localhost:8000/favorite", obj).then(() => {
+                axios.post("http://192.168.0.105/api/favorite", obj).then(() => {
                     setFavorite((prev) => [...prev, obj]);
                 });
             }
@@ -71,10 +71,10 @@ function App() {
 
     const onAddCart = (obj) => {
         if (cartItems.find((item) => item.id === obj.id)){
-            axios.delete(`http://localhost:8000/cart/${obj.id}`)
+            axios.delete(`http://192.168.0.105/api/cart/${obj.id}`)
             setCartItems((prev) => prev.filter((item) => item.id !== obj.id))
         } else{
-            axios.post('  http://localhost:8000/cart', obj)
+            axios.post('  http://192.168.0.105/api/cart', obj)
             setCartItems((prev) => [...prev, obj])
         }
     };
@@ -82,7 +82,7 @@ function App() {
         setSearchValue(event.target.value);
     };
     const onRemoveItem = (id) => {
-        axios.delete(`http://localhost:8000/cart/${id}`);
+        axios.delete(`http://192.168.0.105/api/cart/${id}`);
         setCartItems((prev) => prev.filter((item) => item.id !== id));
     };
     return (

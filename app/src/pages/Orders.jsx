@@ -14,7 +14,7 @@ function Orders() {
     React.useEffect(() => {
         (async () => {
             try {
-                const { data } = await axios.get('http://localhost:8000/orders');
+                const { data } = await axios.get('http://192.168.0.105/api/orders');
                 setOrders(data);
                 setIsLoading(false);
             } catch (error) {
@@ -26,7 +26,7 @@ function Orders() {
     const handleDeleteOrder = async (orderId) => {
         try {
             console.log(orderId)
-            await axios.delete(`http://localhost:8000/orders/${orderId}`);
+            await axios.delete(`http://192.168.0.105/api/orders/${orderId}`);
             setOrders((prevOrders) => prevOrders.filter((order) => order.id !== orderId));
         } catch (error) {
             console.error('Ошибка при удалении заказа:', error);
