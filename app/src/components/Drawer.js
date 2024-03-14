@@ -10,10 +10,10 @@ function Drawer({onClose, onRemove, items=[],opened}) {
     const {cartItems,setCartItems,totalPrice} = useCart()
     const onClickOrder =  async () => {
         try {
-            const {data} = await axios.post('http://192.168.0.105/api/orders' ,{
+            const {data} = await axios.post('http://192.168.0.103/api/orders' ,{
                 items: cartItems
             })
-            await axios.delete(`http://192.168.0.105/api/cart/${data.id}`);
+            await axios.delete(`http://192.168.0.103/api/cart/${data.id}`);
             console.log(cartItems)
             setIsOrdered(true)
             setIdOrder(data.id)

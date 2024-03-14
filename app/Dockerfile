@@ -5,6 +5,7 @@ COPY ./app/package.json ./app/package-lock.json ./
 RUN npm install
 COPY ./app ./
 RUN npm run build
+RUN npm test
 
 # Nginx для статического раздачи собранного приложения
 FROM nginx:1.21.1-alpine
