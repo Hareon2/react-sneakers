@@ -1,0 +1,58 @@
+name: CI/CD Pipeline
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
+
+    - name: Install Package
+      run: |
+         sudo apt-get update
+         sudo apt-get install git -y
+
+    - name: Log in to Docker Hub
+      uses: docker/login-action@v1
+      with:
+        username: ${{ secrets.DOCKER_USERNAME }}
+        password: ${{ secrets.DOCKER_TOKEN }}
+
+    - name: Build and push App Docker image
+      uses: docker/build-push-action@v2
+      with:
+        context: .
+        file: ./app/Dockerfile
+        push: true
+        tags: app:latest
+
+    - name: Build and push JSON Server Docker image
+      uses: docker/build-push-action@v2
+      with:
+        context: .
+        file: ./data/Dockerfile
+        push: true
+        tags: json-server-data:latest
+
+    - name: Preconfig for ansible
+      run: | 
+         sudo apt-get install -y openssh-client
+         echo "${{ secrets.SECRET_KEY }}" | base64 --decode > secret_key
+         sudo mv secret_key /root/.ssh/id_rsa
+         sudo chmod 600 /root/.ssh/id_rsa
+         ssh-keyscan -H ${{ secrets.SERVER_IP }} >> /root/.ssh/known_hosts
+
+    - name: Deploy to server
+      uses: dawidd6/action-ansible-playbook@v2
+      with:
+        playbook: all.yml
+        directory: ./ansible/
+        inventory: |
+          [cluster] 
+          server1 ansible_host=${{ secrets.SERVER_IP }} ansible_user=${{ secrets.SERVER_USER }} ansible_port=${{ secrets.ANSIBLE_SERVER_PORT }} ansible_private_key_file=/root/.ssh/id_rsa
+        vault_password: ${{ secrets.VAULT_PASSWORD }}
