@@ -40,13 +40,16 @@ jobs:
         tags: ${{ secrets.DOCKER_USERNAME }}/json-server-data:latest
 
     - name: Preconfig for ansible
-      run: | 
-         sudo apt-get install -y openssh-client
-         echo "${{ secrets.SECRET_KEY }}" > secret_key
-         sudo mv secret_key /root/.ssh/id_rsa
-         sudo chmod 600 /root/.ssh/id_rsa
-         ssh-keyscan -H ${{ secrets.SERVER_IP }} | sudo tee -a /root/.ssh/known_hosts
-         sudo ssh-copy-id -i /root/.ssh/id_rsa vagrant@${{ secrets.SERVER_IP }}
+      run: |
+       sudo apt-get install -y openssh-client
+       echo "${{ secrets.PUBLIC_KEY }}" > public_key
+       echo "${{ secrets.SECRET_KEY }}" > secret_key
+       sudo mv secret_key /root/.ssh/id_rsa
+       sudo mv public_key /root/.ssh/id_rsa.pub
+       sudo chmod 644 /root/.ssh/id_rsa.pub
+       sudo chmod 600 /root/.ssh/id_rsa
+       sudo ssh-keyscan -H ${{ secrets.SERVER_IP }} | sudo tee -a /root/.ssh/known_hosts
+       sudo ssh-copy-id -i /root/.ssh/id_rsa vagrant@${{ secrets.SERVER_IP }}
 
 
     - name: Deploy to server
