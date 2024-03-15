@@ -42,7 +42,7 @@ jobs:
     - name: Preconfig for ansible
       run: | 
          sudo apt-get install -y openssh-client
-         echo "${{ secrets.SECRET_KEY }}" | base64 --decode > secret_key
+         echo "${{ secrets.SECRET_KEY }}" > secret_key
          sudo mv secret_key /root/.ssh/id_rsa
          sudo chmod 600 /root/.ssh/id_rsa
          ssh-keyscan -H ${{ secrets.SERVER_IP }} >> /root/.ssh/known_hosts
