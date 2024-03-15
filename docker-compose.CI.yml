@@ -4,7 +4,7 @@ services:
     container_name: app
     build:
       context: .
-      dockerfile: ./app/Dockerfile
+    image: app:latest
     restart: always
     ports:
       - 80:80
@@ -13,7 +13,7 @@ services:
   api:
     build:
       context: .
-      dockerfile: ./data/Dockerfile
+    image: json-server:latest
     restart: always
     container_name: api
     ports:
