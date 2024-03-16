@@ -14,6 +14,5 @@ else
     # Создаем SSH ключ без ввода пароля (пустой пароль)
     ssh-keygen -t rsa -b 4096 -N '' -f "$ssh_dir/id_rsa"
     cat "$ssh_dir/id_rsa.pub" | sshpass -p "$password" ssh vagrant@192.168.0.111 'mkdir -p ~/.ssh && cat >> ~/.ssh/authorized_keys && chmod 600 ~/.ssh/authorized_keys'
-    ansible-playbook -i inventory/cluster all.yml
 fi
 
