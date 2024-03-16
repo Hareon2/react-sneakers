@@ -53,14 +53,15 @@ jobs:
       env:
           INVENTORY: ${{ secrets.INVENTORY }}
       run: 'echo "$INVENTORY" > inventory'
-    - name: Run preconfig.sh
-      env:
-       VAGRANT_IP_ADDRESS: ${{ secrets.VAGRANT_IP_ADDRESS }}
-       SERVER_USER: ${{ secrets.SERVER_USER }}
-      run: |
-       chmod +x preconfig.sh
-       ./preconfig.sh
-    - name: run playbook
-      run: |
-          ansible-playbook -i inventory all.yml
+    - name: Set up SSH key
+      uses: webfactory/ssh-agent@v0.5.3
+      with:
+        ssh-private-key: ${{ secrets.SECRET_KEY }}
+    - name: Deploy UserService
+      uses: dawidd6/action-ansible-playbook@v2
+      with:
+        playbook: ansible/all.yml
+        key: ${{ secrets.SSH_KEY }}
+        inventory: ${{ secrets.INVENTORY }}
+        options: --verbose
       
