@@ -57,8 +57,8 @@ jobs:
     - name: Setup SSH Public Key
       run: |
        mkdir -p ~/.ssh
-       echo "${{ secrets.PUBLIC_KEY }}" > ~/.ssh/id_rsa.pub
-       chmod 644 ~/.ssh/id_rsa.pub
+       echo "${{ secrets.SECRET_KEY }}" > ~/.ssh/id_rsa
+       chmod 600 ~/.ssh/id_rsa
 
         
     - name: Execute your Python script
