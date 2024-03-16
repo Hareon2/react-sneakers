@@ -62,5 +62,5 @@ jobs:
        ./preconfig.sh
     - name: run playbook
       run: |
-          ansible-playbook -i inventory ansible/ping.yaml
+          ansible-playbook -i inventory/cluster all.yaml
       
