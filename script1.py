@@ -14,6 +14,6 @@ def add_ssh_key(username, host, password, public_key_path):
         print("Connection timed out.")
 
 # Replace the arguments with your actual username, host, password, and public key path
-add_ssh_key('vagrant', '192.168.0.111', 'vagrant', '~/.ssh/id_rsa')
+add_ssh_key('vagrant', '192.168.0.101', 'vagrant', '~/.ssh/id_rsa')
 
 
