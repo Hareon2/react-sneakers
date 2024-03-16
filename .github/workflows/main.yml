@@ -39,17 +39,13 @@ jobs:
         push: true
         tags: ${{ secrets.DOCKER_USERNAME }}/json-server-data:latest
 
-    - name: Preconfig for ansible
-      run: |
-       sudo apt-get install -y openssh-client
-
-
-    - name: Deploy to server
-      uses: dawidd6/action-ansible-playbook@v2
+    - name: Set up Python 3.11
+      uses: actions/setup-python@v4
       with:
-        playbook: all.yml
-        directory: ./ansible/
-        inventory: |
-          [cluster] 
-          server1 ansible_host=${{ secrets.SERVER_IP }} ansible_ssh_user=${{ secrets.SERVER_USER }} ansible_ssh_pass=${{ secrets.SSH_SERVER_PASS }}  ansible_port=${{ secrets.ANSIBLE_SERVER_PORT }} ansible_ssh_private_key_file=${{ secrets.SECRET_KEY }}
-        vault_password: ${{ secrets.VAULT_PASSWORD }}
+        python-version: 3.11
+      # Install python dependencies
+    - name: Install dependencies Including Ansible
+      run: |
+        python -m pip install --upgrade pip
+        if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+        if [ -f test-requirements.txt ]; then pip install -r test-requirements.txt; fi
