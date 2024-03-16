@@ -50,11 +50,6 @@ jobs:
         if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
         if [ -f test-requirements.txt ]; then pip install -r test-requirements.txt; fi
 
-    - name: Write inventory to file
-      env:
-          INVENTORY: ${{ secrets.INVENTORY }}
-      run: 'echo "$INVENTORY" > inventory'
-
     - name: Set up SSH key
       uses: webfactory/ssh-agent@v0.5.3
       with:
@@ -65,6 +60,7 @@ jobs:
       with:
         playbook: ansible/all.yml
         inventory: ${{ secrets.INVENTORY }}
+        key: ${{ secrets.SECRET_KEY }}
         options: --verbose
         vault_password: ${{ secrets.VAULT_PASSWORD }}
 
