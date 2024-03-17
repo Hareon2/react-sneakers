@@ -1,0 +1,115 @@
+@mixin flexboxinline() {
+  display: -webkit-inline-flex;
+  display: inline-flex
+}
+
+;
+@mixin flexbox() {
+  display: -webkit-box;
+  display: -moz-box;
+  display: -ms-flexbox;
+  display: -webkit-flex;
+  display: flex;
+}
+
+;
+@mixin flexorder($val) {
+  -webkit-box-ordinal-group: $val;
+  -moz-box-ordinal-group: $val;
+  -ms-flex-order: $val;
+  -webkit-order: $val;
+  order: $val;
+}
+.content {
+  margin: 0;
+  padding: 60px;
+}
+.card {
+  flex-wrap: wrap;
+  margin-right: 37px;
+  p {
+    width: 150px;
+    font-size: 14px;
+    line-height: 17px;
+  }
+  &:hover{
+    box-shadow: 0px 20px 30px rgba(0, 0, 0, 0.05);
+    transition: 0.2s;
+    transform: translateY(-5px);
+  }
+  transition: box-shadow 0.2s ease-in-out, 0.2s ease-in-out;
+  width: 210px;
+  border: 1px solid #f3f3f3;
+  border-radius: 40px;
+
+  &__info {
+    @include flexbox();
+    justify-content: space-between;
+  }
+
+  &__price {
+    span{
+      color: #BDBDBD;
+      font-size: 11px;
+      line-height: 13px;
+    }
+    img{
+      cursor: pointer;
+    }
+    @include flexbox();
+    flex-direction: column;
+    font-size: 14px;
+  }
+
+  &__objects {
+    padding: 20px 30px 30px 30px;
+  }
+  &__like{
+  }
+  .button {
+    img {
+      align-items: center;
+      padding: 3px 0px 0px 0.5px;
+    }
+
+    background: #FFFFFF;
+    border: 1px solid #F2F2F2;
+    border-radius: 8px;
+    box-sizing: border-box;
+    height: 32px;
+    width: 32px;
+    cursor: pointer;
+  }
+  .buttonClicked {
+    background: linear-gradient(180deg, #89F09C 0%, #3CC755 100%);
+    border: 1px solid #F2F2F2;
+    border-radius: 8px;
+    box-sizing: border-box;
+    height: 32px;
+    width: 32px;
+    cursor: pointer;
+
+  }
+  .favorite{
+    cursor: pointer;
+    img{
+      position: absolute;
+      border: 1px solid #F8F8F8;
+      border-radius: 7px;
+      padding: 9px;
+      margin-top: 5px;
+      background-color: #FEF0F0;
+    }
+  }
+  .unfavorite{
+    cursor: pointer;
+    img{
+      position: absolute;
+      border: 1px solid #F8F8F8;
+      border-radius: 7px;
+      padding: 9px;
+      margin-top: 5px;
+    }
+  }
+}
+
