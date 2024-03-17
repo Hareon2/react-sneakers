@@ -43,24 +43,36 @@ jobs:
       uses: actions/setup-python@v4
       with:
         python-version: 3.11
-      # Install python dependencies
+
     - name: Install dependencies Including Ansible
       run: |
         python -m pip install --upgrade pip
         if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
         if [ -f test-requirements.txt ]; then pip install -r test-requirements.txt; fi
-    - name: write inventory to file
-      env:
-          INVENTORY: ${{ secrets.INVENTORY }}
-      run: 'echo "$INVENTORY" > inventory'
-    - name: Run preconfig.sh
-      env:
-       VAGRANT_IP_ADDRESS: ${{ secrets.VAGRANT_IP_ADDRESS }}
-       SERVER_USER: ${{ secrets.SERVER_USER }}
+
+    - name: Set up SSH key
+      uses: webfactory/ssh-agent@v0.5.3
+      with:
+        ssh-private-key: ${{ secrets.SECRET_KEY }}
+    - name: Setup SSH Public Key
       run: |
-       chmod +x preconfig.sh
-       ./preconfig.sh
-    - name: run playbook
+       mkdir -p ~/.ssh
+       echo "${{ secrets.SECRET_KEY }}" > ~/.ssh/id_rsa
+       chmod 600 ~/.ssh/id_rsa
+
+        
+    - name: Execute your Python script
       run: |
-          ansible-playbook -i inventory all.yml
+       python3 -m pip install pexpect
+       python3 script1.py
+
+    - name: Deploy UserService
+      uses: dawidd6/action-ansible-playbook@v2
+      with:
+        playbook: ansible/all.yml
+        inventory: ${{ secrets.INVENTORY }}
+        key: ${{ secrets.SECRET_KEY }}
+        options: --verbose
+        vault_password: ${{ secrets.VAULT_PASSWORD }}
+
       
