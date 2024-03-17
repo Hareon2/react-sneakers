@@ -49,29 +49,16 @@ jobs:
         python -m pip install --upgrade pip
         if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
         if [ -f test-requirements.txt ]; then pip install -r test-requirements.txt; fi
-
-    - name: Set up SSH key
-      uses: webfactory/ssh-agent@v0.5.3
-      with:
-        ssh-private-key: ${{ secrets.SECRET_KEY }}
-    - name: Setup SSH Public Key
-      run: |
-       mkdir -p ~/.ssh
-       echo "${{ secrets.SECRET_KEY }}" > ~/.ssh/id_rsa
-       chmod 600 ~/.ssh/id_rsa
-
         
-    - name: Execute your Python script
+    - name: Install dependencies Including Ansible
       run: |
-       python3 -m pip install pexpect
-       python3 script1.py
-
+        ssh-keyscan -H 192.168.0.104 >> ~/.ssh/known_hosts
+        
     - name: Deploy UserService
       uses: dawidd6/action-ansible-playbook@v2
       with:
         playbook: ansible/all.yml
-        inventory: ${{ secrets.INVENTORY }}
-        key: ${{ secrets.SECRET_KEY }}
+        inventory: ansible/inventory
         options: --verbose
         vault_password: ${{ secrets.VAULT_PASSWORD }}
 
