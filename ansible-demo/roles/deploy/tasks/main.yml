@@ -1,0 +1,40 @@
+
+- name: Создание пользователя noteadmin
+  become: true
+  become_user: root
+  user:
+    name: "{{ deploy.user }}"
+    password: "{{ deploy.password }}"
+    createhome: true
+    shell: /bin/bash
+    groups: sudo
+    append: true
+
+- name: Создание директории {{ app_path }}/
+  file:
+    path: "{{ deploy.app_path }}/"
+    state: directory
+    owner: "{{ deploy.user }}"
+    group: "{{ deploy.user }}"
+    mode: "0775"
+  become: true
+  become_user: root
+
+- name: "copy docker-compose.yml"
+  copy:
+    src: "docker-compose.yml"
+    dest: "{{ deploy.app_path }}/docker-compose.yml"
+    owner: "noteadmin"
+    group: "noteadmin"
+    mode: "0644"
+  become: true
+  become_method: sudo
+
+- name: "stop services"
+  shell: docker-compose -f {{ deploy.app_path }}/docker-compose.yml stop
+
+- name: "pull images"
+  shell: docker-compose -f {{ deploy.app_path }}/docker-compose.yml pull
+
+- name: "start services"
+  shell: docker-compose -f {{ deploy.app_path }}/docker-compose.yml up -d

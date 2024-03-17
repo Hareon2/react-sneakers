@@ -1,0 +1,6 @@
+- name: Connect to host and try if ansible-playbook execution is working
+  block:
+    - name: ping
+      ansible.builtin.ping:
+
+
