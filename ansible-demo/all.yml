@@ -1,7 +1,0 @@
----
-- name: deploy
-  hosts: cluster
-  roles:
-    - preconfig
-    - deploy
-
