@@ -1,6 +1,0 @@
----
-- name: deploy
-  hosts: cluster
-  roles:
-    - deploy
-

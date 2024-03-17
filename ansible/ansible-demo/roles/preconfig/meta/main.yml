@@ -1,9 +1,0 @@
-galaxy_info:
-  description: Настройка серверов для работы с Docker
-  author: Yuriy
-  license: MIT
-  min_ansible_version: 2.12.10
-  platforms:
-  - name: Ubuntu
-    versions:
-    - all
