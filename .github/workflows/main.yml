@@ -54,6 +54,7 @@ jobs:
       run: |
        mkdir ~/.ssh
        touch ~/.ssh/known_hosts
+       ping -c 3 192.168.0.104
        ssh-keyscan -H 192.168.0.104 >> ~/.ssh/known_hosts
         
     - name: Deploy UserService
