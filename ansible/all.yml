@@ -1,8 +1,10 @@
 - name: preconfig
   hosts: vm1
-  roles: preconfig
+  roles:
+    - preconfig
+
 - name: deploy
   hosts: vm1
   roles:
-  - deploy
+    - deploy
 
