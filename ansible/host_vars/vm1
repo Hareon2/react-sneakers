@@ -1,4 +1,0 @@
-ansible_ssh_host: ${{ hosts.ip }}
-ansible_ssh_user: ${{ hosts.user }}
-ansible_ssh_pass: ${{ hosts.pass }}
-ansible_become_pass: ${{ hosts.become_pass }}
